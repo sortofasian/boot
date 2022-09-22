@@ -1,0 +1,29 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug backend",
+            "runtimeExecutable": "yarn",
+            "runtimeArgs": [
+                "nodemon",
+                "--ext",
+                "ts",
+                "--loader",
+                "ts-node/esm",
+                "--inspect",
+                "--experimental-specifier-resolution",
+                "node"
+            ],
+            "args": ["${workspaceFolder}/src"],
+            "cwd": "${workspaceFolder}",
+            "skipFiles": ["<node_internals>/**", "node_modules/**"],
+            "console": "integratedTerminal",
+            "restart": true
+        }
+    ]
+}
