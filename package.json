@@ -20,6 +20,6 @@
     },
     "scripts": {
         "start": "nodemon --ext ts --loader ts-node/esm --experimental-specifier-resolution node src",
-        "build": "docker build -t bootbot:latest ."
+        "build": "yarn tsc && docker build -t sortofasian/the_boot:latest ."
     }
 }
