@@ -46,8 +46,8 @@ export async function votekick(interaction: ChatInputCommandInteraction) {
 
     let agreeingUsers: string[] = []
     /*let threshold = interaction.options.getInteger('threshold', false) as number
-    if (threshold === null) threshold = Math.round((interaction.guild?.memberCount as number) / 2)*/
-    const threshold = Math.round((interaction.guild?.memberCount as number) / 2)
+    if (threshold === null) threshold = Math.round((interaction.guild?.memberCount as number) / 4)*/
+    const threshold = Math.round((interaction.guild?.memberCount as number) / 4)
 
     let kickButton = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
