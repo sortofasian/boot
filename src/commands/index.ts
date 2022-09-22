@@ -3,11 +3,14 @@ import { votekick } from './votekick'
 
 function slashCommand(interaction: ChatInputCommandInteraction) {
     console.log(
-        `${interaction.createdTimestamp}: ` +
+        `\n${interaction.createdAt}: ` +
             `New slash command "${interaction.commandName}" ` +
             `from ${interaction.user.username}` +
             `#${interaction.user.discriminator} ` +
-            `(${interaction.user.id})`
+            `(${interaction.user.id}) ` +
+            `with options ${interaction.options.data.map(
+                (option) => ` ${option.name}: ${option.value}`
+            )}`
     )
 
     switch (interaction.commandName) {

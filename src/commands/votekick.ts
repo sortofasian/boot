@@ -25,14 +25,14 @@ export const votekickCmd = new SlashCommandBuilder()
             .setName('reinvite')
             .setDescription('Send an invite to the kicked user. Defaults to false')
     )
-    .addIntegerOption(
+    /*    .addIntegerOption(
         new SlashCommandIntegerOption()
             .setName('threshold')
             .setDescription(
-                'Minimum number of users to initiate the kick. Defaults to half the server'
+                'Minimum number of users to initiate the kick. Defaults to 25% of the server'
             )
             .setMinValue(1)
-    )
+    )*/
     .toJSON()
 
 export async function votekick(interaction: ChatInputCommandInteraction) {
@@ -42,10 +42,12 @@ export async function votekick(interaction: ChatInputCommandInteraction) {
         interaction.reply('Internal error: Interaction is missing user option')
         return
     }
+    const username = `${user.username}#${user.discriminator}`
 
     let agreeingUsers: string[] = []
-    let threshold = interaction.options.getInteger('threshold', false) as number
-    if (threshold === null) threshold = Math.round((interaction.guild?.memberCount as number) / 2)
+    /*let threshold = interaction.options.getInteger('threshold', false) as number
+    if (threshold === null) threshold = Math.round((interaction.guild?.memberCount as number) / 2)*/
+    const threshold = Math.round((interaction.guild?.memberCount as number) / 2)
 
     let kickButton = new ActionRowBuilder<ButtonBuilder>().addComponents(
         new ButtonBuilder()
@@ -83,33 +85,33 @@ export async function votekick(interaction: ChatInputCommandInteraction) {
             if (interaction.options.getBoolean('reinvite')) {
                 const invite = await interaction.guild?.invites.create(interaction.channelId, {
                     maxUses: 1,
-                    reason: `${user.username}#${user.discriminator} was votekicked`
+                    reason: `${username} was votekicked`
                 })
                 if (!invite) {
                     console.log('ERROR: Could not create an invite back to the server')
                     return
                 }
 
-                try {
-                    user.send(
-                        `For some reason, someone decided you should come back: ${invite.url}`
-                    )
-                } catch (err) {
-                    console.log('ERROR: Could not send message to user\n')
-                    interaction.editReply("Couldn't reinvite user; use this link: " + invite.url)
-                }
+                await user
+                    .send(`For some reason, someone decided you should come back: ${invite.url}`)
+                    .catch((err) => {
+                        console.log('ERROR: Could not send message to user')
+                        interaction.editReply(
+                            `Couldn't reinvite ${username}; use this link: ` + invite.url
+                        )
+                    })
             }
             await interaction.guild?.members.kick(user)
             await interaction.editReply({
-                content: `${user.username} was BOOTED with a final count of ${agreeingUsers} votes against them. HA!`,
+                content: `${username} was booted with a final count of ${agreeingUsers.length} votes against them.`,
                 components: []
             })
         } catch (err) {
             if (err instanceof DiscordAPIError) {
                 await interaction.editReply({ content: 'Internal error', components: [] })
                 if (err.code === 50013) {
-                    console.log(`ERROR: Insufficient perms to kick\n`)
-                    interaction.editReply('Could not kick user: Insufficient perms')
+                    console.log(`ERROR: Insufficient perms to kick`)
+                    interaction.editReply(`Could not kick ${username}: Insufficient perms`)
                 } else console.log('ERROR: Could not kick user: ' + err)
             } else throw err
         }

@@ -91,6 +91,7 @@ if (commandsOutdated) {
 }
 
 const Discord = new Client({
+    allowedMentions: { parse: ['everyone'] },
     intents: [GatewayIntentBits.Guilds]
 })
 await Discord.login(config.token)
