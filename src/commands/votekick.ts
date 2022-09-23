@@ -57,7 +57,7 @@ export async function votekick(interaction: ChatInputCommandInteraction) {
     )
     const reply = await interaction
         .reply({
-            content: `@everyone\nVotekick initiated on <@${user.id}>`,
+            content: `@here\nVotekick initiated on <@${user.id}>`,
             components: [kickButton]
         })
         .catch((err) => console.log('ERROR: Could not reply to interaction: ' + err))
